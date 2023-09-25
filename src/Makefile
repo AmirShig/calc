@@ -1,3 +1,6 @@
+
+.PHONY: validate
+
 CC=gcc
 CFLAGS=-std=c11 -Wall -Werror -Wextra -g
 GCOV_FLAGS=-fprofile-arcs -ftest-coverage
@@ -18,21 +21,21 @@ ifeq ($(OS),Darwin)
 endif
 
 all:
-	rm -rf *.a *.o
-	make s21_matrix.a
-	make test
+	make clean
+	make validate
 
-s21_matrix.a:
-	gcc -Wall -Wextra -Werror s21_functions/*.c -c
-	ar rcs s21_matrix.a *.o
-	ranlib s21_matrix.a
-	rm *.o
+
+validate:
+	$(CC) $(CFLAGS) main.c validation.c -o $@
+
+
 
 clean:
 	rm -rf *.a *.o 
 	rm -rf unit_test gcov_test
 	rm -rf *.gcda *.gcno *.info report/
 	rm -rf *.dSYM
+	rm -rf validate
 
 rebuild:
 	make clean
@@ -60,7 +63,7 @@ endif
 
 check_style:
 	cp ../materials/linters/.clang-format .
-	clang-format -n s21_functions/*.c *.h
+	clang-format -n *.c *.h
 
 valgrind:
 	CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all ./unit_test
