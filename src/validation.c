@@ -20,22 +20,22 @@ int validation(const char *src) {
   error_code = check_bracket(src);  // Проверка корректности скобок
 
   for (; *src && !error_code; src++) {
-    while (is_space(*src)) src++;  // пропускаем все пробелы
+    while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
 
     // проверяем корректность числа
-    if (is_digit(*src)) {
+    if (IS_DIGIT(*src)) {
       status = DIGIT;
-      while (is_digit(*src)) src++;
+      while (IS_DIGIT(*src)) src++;
       if ((*src) == '.') {
         src++;
-        if (!is_digit(*src)) {
+        if (!IS_DIGIT(*src)) {
           error_code = FAILURE;
           break;
         }
-        while (is_digit(*src)) src++;
+        while (IS_DIGIT(*src)) src++;
       }
     }
-    while (is_space(*src)) src++;  // пропускаем все пробелы
+    while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
 
     error_code = check_operators(src, &status);
   }

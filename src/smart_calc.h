@@ -9,12 +9,12 @@
 
 #define SUCCESS 0
 #define FAILURE 1
-#define N_MAX 255
+#define N_MAX 256
 #define operators "+-*/^"
 
-#define is_unary(c) (c == '+' || c == '-')
-#define is_space(c) (c == ' ')
-#define is_digit(c) ((c) >= '0' && (c) <= '9')
+#define IS_UNARY(c) (c == '+' || c == '-')
+#define IS_SPACE(c) (c == ' ')
+#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
 int validation(const char *src);
 #endif  // SMART_CALC_H
