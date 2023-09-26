@@ -16,5 +16,22 @@
 #define IS_SPACE(c) (c == ' ')
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
+typedef struct Node Node;
+
+typedef struct Lex {
+  double val;    // Сама лексема
+  int priorety;  // проиоретет лексемы
+  int val_type;  // тип лексемы (число/скобка/оператор)
+} Lex;
+
+typedef struct list {
+  Node *top;  // Вершина стека
+} list;
+
+struct Node {
+  Lex val;     // Значение, тип и приоритет лексемы
+  Node *next;  // Указатель на след. элемент стека
+};
+
 int validation(const char *src);
 #endif  // SMART_CALC_H

@@ -26,7 +26,7 @@ all:
 
 
 validate:
-	$(CC) $(CFLAGS) main.c validation.c -o $@
+	$(CC) $(CFLAGS) entrance.c validation.c -o $@
 
 
 
