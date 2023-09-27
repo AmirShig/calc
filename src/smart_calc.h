@@ -24,9 +24,9 @@ typedef struct Lex {
   int val_type;  // тип лексемы (число/скобка/оператор)
 } Lex;
 
-typedef struct list {
-  Node *top;  // Вершина стека
-} list;
+// typedef struct list {
+//   Node *top;  // Вершина стека
+// } list;
 
 struct Node {
   Lex val;     // Значение, тип и приоритет лексемы
