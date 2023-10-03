@@ -7,16 +7,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SUCCESS 0
-#define FAILURE 1
 #define N_MAX 256
 #define operators "+-*/^"
+
+typedef enum lex_type {
+  DIGIT = 10,
+  OPERATOR,
+  BRACKET,
+  FUNCTION,
+  UNARY
+  // BINARY,
+} data_type;
+
+typedef enum error_code {
+  SUCCESS = 0,
+  FAILURE,
+  CALC_ERROR,
+  INCORRECT_INPUT,
+  MALLOC_ERR,
+  STACK_OVERFLOW
+} errnum;
 
 #define IS_UNARY(c) (c == '+' || c == '-')
 #define IS_SPACE(c) (c == ' ')
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
-
-typedef struct Node Node;
 
 typedef struct Lex {
   double val;    // Сама лексема
@@ -24,14 +38,14 @@ typedef struct Lex {
   int val_type;  // тип лексемы (число/скобка/оператор)
 } Lex;
 
-// typedef struct list {
-//   Node *top;  // Вершина стека
-// } list;
+typedef struct stack_t {
+  Node *top;  // Вершина стека
+} stack_t;
 
-struct Node {
-  Lex val;     // Значение, тип и приоритет лексемы
-  Node *next;  // Указатель на след. элемент стека
-};
+typedef struct Node {
+  Lex val;  // Значение, тип и приоритет лексемы
+  struct Node *next;  // Указатель на след. элемент стека
+} Node;
 
 int validation(const char *src);
 #endif  // SMART_CALC_H

@@ -1,9 +1,11 @@
 #include "smart_calc.h"
 
-void create_stack(Node *stack) { stack->next = NULL; }
+void create_stack(stack_t *stack) { stack->top = NULL; }
+
+int is_empty(stack_t *stack) { return (stack->top = NULL); }
 
 int push(Node *head, Lex value) {
-  int error_code = SUCCESS;
+  errnum error_code = SUCCESS;
   Node *tmp = calloc(1, sizeof(Node));
   if (tmp == NULL) {
     error_code = FAILURE;
@@ -13,7 +15,7 @@ int push(Node *head, Lex value) {
     head = tmp;
   }
   // Node stack->next = ;
-  return 0;
+  return error_code;
 }
 
 double pop(Node *stack) {}

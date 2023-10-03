@@ -1,21 +1,8 @@
-#include "smart_calc.h"
-
-// status of current position
-#define START_POS 1  // Начало выражения / сразу после откр. скобки
-#define CALC_OPER 2  // Арифметический оператор
-#define END_POS 3  // Конец выражения / после закр. скобки
-#define UNARY 4  // Послу унарного оператора
-#define DIGIT 5  // После числа
-#define TRG_POS 6  // После тригонометрического оператора
-
-int check_bracket(const char *src);
-int check_operators(const char *src, int *status);
-int check_unary(int **status, int error_code);
-int check_trigonometry(const char *src, int **status, int error_code);
+#include "validation.h"
 
 int validation(const char *src) {
   int error_code = SUCCESS;
-  int status = START_POS;
+  Position status = START_POS;
 
   error_code = check_bracket(src);  // Проверка корректности скобок
 
@@ -46,7 +33,7 @@ int validation(const char *src) {
   return error_code;
 }
 
-int check_operators(const char *src, int *status) {
+int check_operators(const char *src, Position *status) {
   int error_code = SUCCESS;
 
   switch (*src) {
@@ -96,7 +83,7 @@ int check_bracket(const char *src) {
   return error_code;
 }
 
-int check_unary(int **status, int error_code) {
+int check_unary(Position **status, int error_code) {
   switch (**status) {
     case START_POS:
     case CALC_OPER:
@@ -118,7 +105,7 @@ int check_unary(int **status, int error_code) {
 }
 
 // проверка тригонометрических операторов
-int check_trigonometry(const char *src, int **status, int error_code) {
+int check_trigonometry(const char *src, Position **status, int error_code) {
   switch (*src) {
     case 's':  // sin(x), sqrt(x)
       if (strncmp(src, "sin", 3) == 0) {
