@@ -25,7 +25,8 @@ typedef enum error_code {
   CALC_ERROR,
   INCORRECT_INPUT,
   MALLOC_ERR,
-  STACK_OVERFLOW
+  STACK_OVERFLOW,
+  EMPTY_STACK
 } errnum;
 
 #define IS_UNARY(c) (c == '+' || c == '-')
@@ -34,18 +35,25 @@ typedef enum error_code {
 
 typedef struct Lex {
   double val;    // Сама лексема
-  int priorety;  // проиоретет лексемы
-  int val_type;  // тип лексемы (число/скобка/оператор)
+  int priority;  // проиоретет лексемы
+  data_type val_type;  // тип лексемы (число/скобка/оператор)
 } Lex;
-
-typedef struct stack_t {
-  Node *top;  // Вершина стека
-} stack_t;
 
 typedef struct Node {
   Lex val;  // Значение, тип и приоритет лексемы
   struct Node *next;  // Указатель на след. элемент стека
 } Node;
 
+typedef struct stack_t {
+  Node *top;  // Вершина стека
+} stack_t;
+
 int validation(const char *src);
+
+/***************** stack operations *******************/
+void create_stack(stack_t *stack);
+int is_empty(stack_t *stack);
+int push(stack_t *head, Lex value);
+int pop(stack_t *stack, Lex *result);
+
 #endif  // SMART_CALC_H

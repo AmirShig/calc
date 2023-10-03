@@ -1,5 +1,5 @@
 
-.PHONY: validate
+.PHONY: validate, main_test
 
 CC=gcc
 CFLAGS=-std=c11 -Wall -Werror -Wextra -g
@@ -28,7 +28,8 @@ all:
 validate:
 	$(CC) $(CFLAGS) entrance.c validation.c -o $@
 
-
+main_test:
+	$(CC) $(CFLAGS) test_main.c stack_operations.c -o $@
 
 clean:
 	rm -rf *.a *.o 
@@ -66,7 +67,7 @@ check_style:
 	clang-format -n *.c *.h
 
 valgrind:
-	CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all ./unit_test
+	CK_FORK=no valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all ./main_test
 
 push:
 	git add .

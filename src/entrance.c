@@ -1,12 +1,12 @@
 #include "smart_calc.h"
 
 int entrance() {
-  int error_code = SUCCESS;
+  errnum error_code = SUCCESS;
   char input[N_MAX + 1];
-  Node input_stack = {0};
-  Node reverse = {0};
-  Node RPN = {0};
-  Node operators_stack = {0};
+  stack_t input_stack = {0};
+  stack_t reverse = {0};
+  stack_t RPN = {0};
+  stack_t operators_stack = {0};
 
   // Считывание  строки и проверка на корректность ввода
   if (fgets(input, N_MAX, stdin)) {
