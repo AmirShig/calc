@@ -16,7 +16,7 @@ int main() {
     value.val += 20.5;
   }
 
-  for (int i = 0; i < 5 && error_code == SUCCESS; i++) {
+  for (int i = 0; i < 6 && error_code == SUCCESS; i++) {
     Lex result = {0};
     error_code = pop(&A, &result);
   }

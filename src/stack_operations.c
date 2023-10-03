@@ -20,7 +20,7 @@ int push(stack_t *head, Lex value) {
 int pop(stack_t *stack, Lex *result) {
   errnum error_code = SUCCESS;
   if (is_empty(stack)) {
-    error_code = FAILURE;
+    error_code = EMPTY_STACK;
   } else {
     Node *node_tmp = stack->top;
     // Lex lex_tmp = node_tmp->val;
