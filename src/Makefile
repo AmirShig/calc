@@ -28,7 +28,7 @@ validate:
 	$(CC) $(CFLAGS) entrance.c validation.c -o $@
 
 main_test:
-	$(CC) $(CFLAGS) test_main.c stack_operations.c -o $@
+	$(CC) $(CFLAGS) test_main.c stack_operations.c parcer.c -o $@
 
 clean:
 	rm -rf *.a *.o 

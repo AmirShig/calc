@@ -3,24 +3,17 @@
 int main() {
   int error_code = SUCCESS;
 
-  stack_t A = {0};
-  Lex value = {0};
+  char input[N_MAX] = "1/3*(5+1)/2";
+  char result_rpn[N_MAX] = {0};
 
-  value.priority = 1;
-  value.val = 1000.0;
-  value.val_type = DIGIT;
+  error_code = parser_to_rpn(input, result_rpn);
 
-  for (int i = 0; i < 5 && error_code == SUCCESS; i++) {
-    error_code = push(&A, value);
-    value.priority += 1;
-    value.val += 20.5;
+  if (error_code == SUCCESS) {
+    printf("\ninput: %s\n\n", input);
+    printf("WORK SUCCESS!\n");
+    printf("\nexpression in RPN: %s\n", result_rpn);
+  } else {
+    printf("WORK FAILED\n");
   }
-
-  for (int i = 0; i < 6 && error_code == SUCCESS; i++) {
-    Lex result = {0};
-    error_code = pop(&A, &result);
-  }
-
-  printf("%d\n", error_code);
   return 0;
 }

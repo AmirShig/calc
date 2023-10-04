@@ -47,7 +47,10 @@ typedef struct Lex {
 } Lex;
 
 typedef struct Node {
-  Lex val;  // Значение, тип и приоритет лексемы
+  // Lex val;  // Значение, тип и приоритет лексемы
+  double val;    // Сама лексема
+  int priority;  // проиоретет лексемы
+  data_type val_type;  // тип лексемы (число/скобка/оператор)
   struct Node *next;  // Указатель на след. элемент стека
 } Node;
 
@@ -63,7 +66,10 @@ int validation(const char *src);
 
 void create_stack(stack_t *stack);
 int is_empty(stack_t *stack);
-int push(stack_t *head, Lex value);
+int push(stack_t *head, Lex *value);
 int pop(stack_t *stack, Lex *result);
 
+/***************** parser *******************/
+
+int parser_to_rpn(char *src, char *RPN_exp);
 #endif  // SMART_CALC_H
