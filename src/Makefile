@@ -1,4 +1,3 @@
-
 .PHONY: validate, main_test
 
 CC=gcc

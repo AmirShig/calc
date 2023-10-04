@@ -8,7 +8,12 @@
 #include <string.h>
 
 #define N_MAX 256
-#define operators "+-*/^"
+
+// #define operators "+-*/^"
+
+#define IS_UNARY(c) (c == '+' || c == '-')
+#define IS_SPACE(c) (c == ' ')
+#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
 typedef enum lex_type {
   DIGIT = 10,
@@ -19,8 +24,14 @@ typedef enum lex_type {
   // BINARY,
 } data_type;
 
+// typedef union Lex_value {
+//   int i_num;
+//   double float_num;
+//   char character;
+// } Lex_value;
+
 typedef enum error_code {
-  SUCCESS = 0,
+  SUCCESS,
   FAILURE,
   CALC_ERROR,
   INCORRECT_INPUT,
@@ -28,10 +39,6 @@ typedef enum error_code {
   STACK_OVERFLOW,
   EMPTY_STACK
 } errnum;
-
-#define IS_UNARY(c) (c == '+' || c == '-')
-#define IS_SPACE(c) (c == ' ')
-#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
 typedef struct Lex {
   double val;    // Сама лексема
@@ -48,9 +55,12 @@ typedef struct stack_t {
   Node *top;  // Вершина стека
 } stack_t;
 
+/***************** validation *******************/
+
 int validation(const char *src);
 
 /***************** stack operations *******************/
+
 void create_stack(stack_t *stack);
 int is_empty(stack_t *stack);
 int push(stack_t *head, Lex value);
