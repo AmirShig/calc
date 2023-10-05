@@ -2,33 +2,44 @@
 
 int entrance() {
   errnum error_code = SUCCESS;
-  char input[N_MAX + 1];
-  stack_t input_stack = {0};
-  stack_t reverse = {0};
-  stack_t RPN = {0};
-  stack_t operators_stack = {0};
+  char input[N_MAX + 1] = "512 - 128 * (125 - (17 + 12 ^ 2))";
+  char result_rpn[N_MAX * 2] = {0};
 
-  // Считывание  строки и проверка на корректность ввода
-  if (fgets(input, N_MAX, stdin)) {
-    error_code = validation(input);
-  } else {
-    error_code = FAILURE;
-  }
+  // // Считывание  строки и проверка на корректность ввода
+  // printf("Введите математическое выражение:\n");
+  // if (fgets(input, N_MAX, stdin)) {
+  //   printf("Строка считана успешно!\n");
+  //   printf("INPUT: %s\n", input);
 
-  // Записываем в стек "как есть" строку
+  //   error_code = validation(input);
+  //   if (error_code == SUCCESS) {
+  //     printf("Строка введена корректно!\n");
+  //   } else {
+  //     printf("Не корректный ввод!\n");
+  //   }
+  // } else {
+  //   printf("Ошибка считывания строки!\n");
+  //   error_code = FAILURE;
+  // }
+
+  // Перводим выражение из инфиксной записи в обратную польскую запись
   if (error_code == SUCCESS) {
-    parcer_to_stack(input, &input_stack);
+    error_code = parser_to_rpn(input, result_rpn);
+    if (error_code == SUCCESS) {
+      printf("RPN: %s\n", result_rpn);
+    } else {
+      printf("RPN calculate is FAILED!\n");
+    }
   }
+
+  // Находим решение получившегося выражения
 
   return error_code;
 }
 
 int main() {
-  int error_code = SUCCESS;
+  errnum error_code = SUCCESS;
   error_code = entrance();
-  if (error_code == SUCCESS)
-    printf("SUCCES! The expression is correct!\n");
-  else
-    printf("FAIL! The epression is INCORRECT!\n");
+  printf("Work: %d\n", error_code);
   return 0;
 }

@@ -1,7 +1,7 @@
 #include "validation.h"
 
-int validation(const char *src) {
-  int error_code = SUCCESS;
+int validation(char *src) {
+  errnum error_code = SUCCESS;
   Position status = START_POS;
 
   error_code = check_bracket(src);  // Проверка корректности скобок
@@ -11,6 +11,10 @@ int validation(const char *src) {
 
     // проверяем корректность числа
     if (IS_DIGIT(*src)) {
+      if (status == END_POS) {
+        error_code = FAILURE;
+        break;
+      }
       status = DIGIT;
       while (IS_DIGIT(*src)) src++;
       if ((*src) == '.') {
@@ -24,7 +28,7 @@ int validation(const char *src) {
     }
     while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
 
-    error_code = check_operators(src, &status);
+    error_code = check_operators(&src, &status);
   }
   if ((status == DIGIT || status == END_POS) && !error_code)
     error_code = SUCCESS;
@@ -33,10 +37,10 @@ int validation(const char *src) {
   return error_code;
 }
 
-int check_operators(const char *src, Position *status) {
-  int error_code = SUCCESS;
+int check_operators(char **src, Position *status) {
+  errnum error_code = SUCCESS;
 
-  switch (*src) {
+  switch (**src) {
     case '(':
       if (*status == DIGIT || *status == END_POS) {
         error_code = FAILURE;
@@ -63,7 +67,14 @@ int check_operators(const char *src, Position *status) {
       }
       break;
     default:
-      error_code = check_trigonometry(src, &status, error_code);
+      **src = check_trigonometry(src, &status, &error_code);
+      if (error_code == SUCCESS && *status == TRG_POS) {
+        if (**src == '(') {
+          *status = START_POS;
+        } else {
+          error_code = FAILURE;
+        }
+      }
       break;
   }
   return error_code;
@@ -83,7 +94,7 @@ int check_bracket(const char *src) {
   return error_code;
 }
 
-int check_unary(Position **status, int error_code) {
+int check_unary(Position **status, errnum error_code) {
   switch (**status) {
     case START_POS:
     case CALC_OPER:
@@ -105,54 +116,63 @@ int check_unary(Position **status, int error_code) {
 }
 
 // проверка тригонометрических операторов
-int check_trigonometry(const char *src, Position **status, int error_code) {
-  switch (*src) {
+char check_trigonometry(char **src, Position **status, errnum *error_code) {
+  switch (**src) {
     case 's':  // sin(x), sqrt(x)
-      if (strncmp(src, "sin", 3) == 0) {
+      if (strncmp(*src, "sin", 3) == 0) {
+        *src += 3;
         **status = TRG_POS;
-      } else if (strncmp(src, "sqrt", 4) == 0) {
+      } else if (strncmp(*src, "sqrt", 4) == 0) {
+        *src += 4;
         **status = TRG_POS;
       } else {
-        error_code = FAILURE;
+        *error_code = FAILURE;
       }
       break;
     case 'c':  // cos(x)
-      if (strncmp(src, "cos", 3) == 0) {
+      if (strncmp(*src, "cos", 3) == 0) {
+        *src += 3;
         **status = TRG_POS;
       } else {
-        error_code = FAILURE;
+        *error_code = FAILURE;
       }
       break;
     case 't':  // tan(x)
-      if (strncmp(src, "tan", 3) == 0) {
+      if (strncmp(*src, "tan", 3) == 0) {
+        *src += 3;
         **status = TRG_POS;
       } else {
-        error_code = FAILURE;
+        *error_code = FAILURE;
       }
       break;
     case 'a':  // acos(x), asin(x), atan(x)
-      if (strncmp(src, "acos", 4) == 0) {
+      if (strncmp(*src, "acos", 4) == 0) {
+        *src += 4;
         **status = TRG_POS;
-      } else if (strncmp(src, "asin", 4) == 0) {
+      } else if (strncmp(*src, "asin", 4) == 0) {
+        *src += 4;
         **status = TRG_POS;
-      } else if (strncmp(src, "atan", 4) == 0) {
+      } else if (strncmp(*src, "atan", 4) == 0) {
+        *src += 4;
         **status = TRG_POS;
       } else {
-        error_code = FAILURE;
+        *error_code = FAILURE;
       }
       break;
     case 'l':  // log(x), ln(x)
-      if (strncmp(src, "log", 3) == 0) {
+      if (strncmp(*src, "log", 3) == 0) {
+        *src += 3;
         **status = TRG_POS;
-      } else if (strncmp(src, "ln", 2) == 0) {
+      } else if (strncmp(*src, "ln", 2) == 0) {
+        *src += 2;
         **status = TRG_POS;
       } else {
-        error_code = FAILURE;
+        *error_code = FAILURE;
       }
       break;
     default:
-      if (**status != END_POS && **status != DIGIT) error_code = FAILURE;
+      if (**status != END_POS && **status != DIGIT) *error_code = FAILURE;
       break;
   }
-  return error_code;
+  return **src;
 }

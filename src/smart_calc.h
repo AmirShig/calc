@@ -15,13 +15,15 @@
 #define IS_SPACE(c) (c == ' ')
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
+typedef enum func { COS = 20, SIN, TAN, ACOS, ASIN, ATAN, SQRT, LN, LOG } func;
+
 typedef enum lex_type {
-  DIGIT = 10,
-  OPERATOR,
-  BRACKET,
-  FUNCTION,
-  UNARY
-  // BINARY,
+  // DIGIT = 10,
+  // OPERATOR,
+  // BRACKET,
+  // FUNCTION,
+  // UNARY
+  BINARY
 } data_type;
 
 // typedef union Lex_value {
@@ -29,6 +31,16 @@ typedef enum lex_type {
 //   double float_num;
 //   char character;
 // } Lex_value;
+
+// status of current position
+typedef enum Position {
+  START_POS = 1,  // Начало выражения / сразу после откр. скобки
+  CALC_OPER = 2,  // Арифметический оператор
+  END_POS = 3,  // Конец выражения / после закр. скобки
+  UNARY = 4,  // Послу унарного оператора
+  DIGIT = 5,  // После числа
+  TRG_POS = 6  // После тригонометрического оператора
+} Position;
 
 typedef enum error_code {
   SUCCESS,
@@ -60,7 +72,7 @@ typedef struct stack_t {
 
 /***************** validation *******************/
 
-int validation(const char *src);
+int validation(char *src);
 
 /***************** stack operations *******************/
 
