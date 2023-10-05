@@ -71,6 +71,7 @@ int parser_to_rpn(char *src, char *RPN_exp) {
           status = DIGIT;
           while (IS_DIGIT(*src)) RPN_tmp[index++] = *src++;
           if ((*src) == '.') {
+            RPN_tmp[index++] = '.';
             src++;
             while (IS_DIGIT(*src)) RPN_tmp[index++] = *src++;
           }

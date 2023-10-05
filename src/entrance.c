@@ -3,7 +3,10 @@
 int entrance() {
   errnum error_code = SUCCESS;
   // char input[N_MAX + 1] = "-512 - 128 * (125 - (17 + 12 ^ 2))";  // 5120
-  char input[N_MAX + 1] = "-sin(-45)";
+  char input[N_MAX + 1] =
+      "-512.159 - 128.5 * (125.7 - (17.4 + 12 ^ 2))";  // 5120
+  printf("input: %s\n", input);
+  // char input[N_MAX + 1] = "-sin(-45)";
   char result_rpn[N_MAX * 2] = {0};
   double result = 0.0;
 
