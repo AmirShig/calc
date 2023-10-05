@@ -2,8 +2,10 @@
 
 int entrance() {
   errnum error_code = SUCCESS;
-  char input[N_MAX + 1] = "512 - 128 * (125 - (17 + 12 ^ 2))";
+  // char input[N_MAX + 1] = "-512 - 128 * (125 - (17 + 12 ^ 2))";  // 5120
+  char input[N_MAX + 1] = "-sin(-45)";
   char result_rpn[N_MAX * 2] = {0};
+  double result = 0.0;
 
   // // Считывание  строки и проверка на корректность ввода
   // printf("Введите математическое выражение:\n");
@@ -33,6 +35,14 @@ int entrance() {
   }
 
   // Находим решение получившегося выражения
+  if (error_code == SUCCESS) {
+    error_code = calculation(result_rpn, &result);
+    if (error_code == SUCCESS) {
+      printf("SUCCESS!!!\nResult: %lf\n", result);
+    } else {
+      printf("Calculation FAILED!\nError code: %d\n", error_code);
+    }
+  }
 
   return error_code;
 }
@@ -40,6 +50,6 @@ int entrance() {
 int main() {
   errnum error_code = SUCCESS;
   error_code = entrance();
-  printf("Work: %d\n", error_code);
+  printf("\nWork: %d\n", error_code);
   return 0;
 }

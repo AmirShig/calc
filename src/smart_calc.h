@@ -8,12 +8,14 @@
 #include <string.h>
 
 #define N_MAX 256
-
-// #define operators "+-*/^"
+#define OPERATORS "+-*/^"
+#define TRG_FUNCTION "sScCtTlLQ"
 
 #define IS_UNARY(c) (c == '+' || c == '-')
 #define IS_SPACE(c) (c == ' ')
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
+#define IS_OPERATOR(c) (strchr(OPERATORS, c) != NULL)
+#define IS_FUNCTION(c) (strchr(TRG_FUNCTION, c) != NULL)
 
 typedef enum func { COS = 20, SIN, TAN, ACOS, ASIN, ATAN, SQRT, LN, LOG } func;
 
@@ -84,4 +86,9 @@ int pop(stack_t *stack, Lex *result);
 /***************** parser *******************/
 
 int parser_to_rpn(char *src, char *RPN_exp);
+
+/***************** calculation *******************/
+
+int calculation(char *src, double *result);
+
 #endif  // SMART_CALC_H

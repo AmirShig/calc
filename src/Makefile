@@ -28,7 +28,7 @@ validate:
 	$(CC) $(CFLAGS) entrance.c validation.c -o $@
 
 main_test:
-	$(CC) $(CFLAGS) stack_operations.c parser.c validation.c entrance.c -o $@
+	$(CC) $(CFLAGS) stack_operations.c parser.c validation.c entrance.c calculation.c -lm -o $@
 	# $(CC) $(CFLAGS) test_main.c validation.c -o $@
 
 clean:
@@ -36,7 +36,7 @@ clean:
 	rm -rf unit_test gcov_test
 	rm -rf *.gcda *.gcno *.info report/
 	rm -rf *.dSYM
-	rm -rf validate
+	rm -rf validate main_test a.out
 
 rebuild:
 	make clean
