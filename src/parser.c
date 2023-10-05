@@ -66,7 +66,7 @@ int parser_to_rpn(char *src, char *RPN_exp) {
       default:
         if (IS_DIGIT(*src)) {
           if (status == UNARY) {
-            RPN_tmp[index++] = '-';
+            RPN_tmp[index++] = 'u';
           }
           status = DIGIT;
           while (IS_DIGIT(*src)) RPN_tmp[index++] = *src++;
