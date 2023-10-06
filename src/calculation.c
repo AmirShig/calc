@@ -77,10 +77,10 @@ int arithmetic_calculate(stack_t *stack, int operator) {
       result.val = A.val * B.val;
       break;
     case '/':
-      if (B.val == 0) {
+      if (A.val == 0) {
         error_code = CALC_ERROR;
       } else {
-        result.val = A.val / B.val;
+        result.val = B.val / A.val;
       }
       break;
     case '^':
@@ -96,11 +96,54 @@ int arithmetic_calculate(stack_t *stack, int operator) {
 }
 
 int function_calculate(stack_t *stack, int operator) {
-  errnum error_code = FAILURE;
-  operator= operator;
-  stack->top = stack->top;
-  printf(
-      "Функцию для обработки тригонметрии пока не завезли =(\nПопробуйте "
-      "позже\n");
+  errnum error_code = SUCCESS;
+  Lex A = {0}, result = {0};
+  double radians = 0.0;
+  if (pop(stack, &A) == SUCCESS) {
+    error_code = SUCCESS;
+  } else {
+    error_code = CALC_ERROR;
+    return error_code;  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  }
+  radians = A.val * M_PI / 180.0;
+  switch (operator) {
+    case 's':  // sin
+      result.val = sin(radians);
+      break;
+    case 'S':  // asin
+      result.val = asin(radians);
+      break;
+    case 'c':  // cos
+      result.val = cos(radians);
+      break;
+    case 'C':  // acos
+      result.val = acos(radians);
+      break;
+    case 't':  // tan
+      result.val = tan(radians);
+      break;
+    case 'T':  // atan
+      result.val = atan(radians);
+      break;
+    case 'Q':  // sqrt
+      result.val = sqrt(A.val);
+      break;
+    case 'l':  // ln
+      result.val = log(A.val);
+      break;
+    case 'L':  // log
+      result.val = log(A.val);
+      break;
+    default:
+      break;
+  }
+  if (error_code == SUCCESS) {
+    error_code = push(stack, &result);
+  }
+  // operator= operator;
+  // stack->top = stack->top;
+  // printf(
+  //     "Функцию для обработки тригонметрии пока не завезли =(\nПопробуйте "
+  //     "позже\n");
   return error_code;
 }

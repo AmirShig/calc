@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define M_PI 3.14159265358979323846
 #define N_MAX 256
 #define OPERATORS "+-*/^"
 #define TRG_FUNCTION "sScCtTlLQ"
