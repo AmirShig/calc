@@ -1,12 +1,10 @@
 #include "smart_calc.h"
 
 int main() {
-  char c = '^';
+  double result = 0;
 
-  if (IS_OPERATOR(c))
-    printf("c - is an operator\n");
-  else
-    printf("c - is not an operator");
+  result = asin(0.5);
+  printf("%lf\n", result);
   return 0;
 }
 

@@ -9,7 +9,7 @@
 
 #define M_PI 3.14159265358979323846
 #define N_MAX 256
-#define OPERATORS "+-*/^"
+#define OPERATORS "+-*/^M"
 #define TRG_FUNCTION "sScCtTlLQ"
 
 #define IS_UNARY(c) (c == '+' || c == '-')
@@ -75,7 +75,7 @@ typedef struct stack_t {
 
 /***************** validation *******************/
 
-int validation(char *src);
+int validation(char *input);
 
 /***************** stack operations *******************/
 

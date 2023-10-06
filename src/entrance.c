@@ -2,24 +2,30 @@
 
 int entrance() {
   errnum error_code = SUCCESS;
+
   // char input[N_MAX + 1] = "-512 - 128 * (125 - (17 + 12 ^ 2))";  // 5120
-  char input[N_MAX + 1] = "105 * log(15) - 19^3 / 11";
-  printf("input: %s\n", input);
+  // char input[N_MAX + 1] = "105 * ln(15) - 19^3 / 11";
+  // char input[N_MAX + 1] = "asin(0.5) + cos(60)"; // ошибка?
+  char input[N_MAX + 1] =
+      "ln(2.718) * (sin(30) * cos(60) - tan(45)) + (8 - 3) / 5";
+  // printf("input: %s\n", input);
+
+  // char input[N_MAX + 1] = {0};
   char result_rpn[N_MAX * 2] = {0};
   double result = 0.0;
 
-  // // Считывание  строки и проверка на корректность ввода
+  // Считывание  строки и проверка на корректность ввода
   // printf("Введите математическое выражение:\n");
   // if (fgets(input, N_MAX, stdin)) {
-  //   printf("Строка считана успешно!\n");
-  //   printf("INPUT: %s\n", input);
+  printf("Строка считана успешно!\n");
+  printf("INPUT: %s\n", input);
 
-  //   error_code = validation(input);
-  //   if (error_code == SUCCESS) {
-  //     printf("Строка введена корректно!\n");
-  //   } else {
-  //     printf("Не корректный ввод!\n");
-  //   }
+  error_code = validation(input);
+  if (error_code == SUCCESS) {
+    printf("Строка введена корректно!\n");
+  } else {
+    printf("Не корректный ввод!\n");
+  }
   // } else {
   //   printf("Ошибка считывания строки!\n");
   //   error_code = FAILURE;

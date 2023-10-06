@@ -104,49 +104,53 @@ int get_priority(char src) {
 
 int trigonometry(char **src, stack_t *operators_stack, Position *status) {
   errnum error_code = SUCCESS;
-  int trg_status = 0;
+  int priority = 0;
   Lex lex_tmp = {0};
   if (strncmp(*src, "sin", 3) == 0) {
     *src += 3;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'s';
   } else if (strncmp(*src, "sqrt", 4) == 0) {
     *src += 4;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'Q';
   } else if (strncmp(*src, "cos", 3) == 0) {
     *src += 3;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'c';
   } else if (strncmp(*src, "tan", 3) == 0) {
     *src += 3;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'t';
   } else if (strncmp(*src, "acos", 4) == 0) {
     *src += 4;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'C';
   } else if (strncmp(*src, "asin", 4) == 0) {
     *src += 4;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'S';
   } else if (strncmp(*src, "atan", 4) == 0) {
     *src += 4;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'T';
   } else if (strncmp(*src, "log", 3) == 0) {
     *src += 3;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'L';
   } else if (strncmp(*src, "ln", 2) == 0) {
     *src += 2;
-    trg_status = 1;
+    priority = 3;
     lex_tmp.val = (int)'l';
+  } else if (strncmp(*src, "mod", 3) == 0) {
+    *src += 3;
+    priority = 2;
+    lex_tmp.val = (int)'M';
   }
-  if (trg_status) {
-    *status = TRG_POS;
+  if (priority) {
+    *status = TRG_POS;  // Надо ли?
     if (**src != '\0') *src -= 1;
-    lex_tmp.priority = 3;
+    lex_tmp.priority = priority;
     error_code = push(operators_stack, &lex_tmp);
   }
   return error_code;

@@ -1,11 +1,16 @@
 #include "validation.h"
 
-int validation(char *src) {
+int validation(char *input) {
   errnum error_code = SUCCESS;
   Position status = START_POS;
-
-  error_code = check_bracket(src);  // Проверка корректности скобок
-
+  if (!input) return INCORRECT_INPUT;
+  char *src = (char *)calloc(strlen(input), sizeof(char));
+  if (src == NULL) {
+    error_code = MALLOC_ERR;
+  } else {
+    strcpy(src, input);
+    error_code = check_bracket(src);  // Проверка корректности скобок
+  }
   for (; *src && !error_code; src++) {
     while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
 
@@ -33,7 +38,7 @@ int validation(char *src) {
   if ((status == DIGIT || status == END_POS) && !error_code)
     error_code = SUCCESS;
   else
-    error_code = FAILURE;
+    error_code = INCORRECT_INPUT;
   return error_code;
 }
 
@@ -63,6 +68,12 @@ int check_operators(char **src, Position *status) {
       if (*status == START_POS || *status == CALC_OPER || *status == UNARY) {
         error_code = FAILURE;
       } else {
+        *status = CALC_OPER;
+      }
+      break;
+    case 'm':
+      if (strncmp(*src, "mod", 3) == 0) {
+        *src += 2;
         *status = CALC_OPER;
       }
       break;

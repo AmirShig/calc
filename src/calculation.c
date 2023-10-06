@@ -83,6 +83,13 @@ int arithmetic_calculate(stack_t *stack, int operator) {
         result.val = B.val / A.val;
       }
       break;
+    case 'M':
+      if (A.val == 0) {
+        error_code = CALC_ERROR;
+      } else {
+        result.val = B.val - (A.val * floor(B.val / A.val));
+      }
+      break;
     case '^':
       result.val = pow(B.val, A.val);
       break;
@@ -111,19 +118,19 @@ int function_calculate(stack_t *stack, int operator) {
       result.val = sin(radians);
       break;
     case 'S':  // asin
-      result.val = asin(radians);
+      result.val = asin(A.val);
       break;
     case 'c':  // cos
       result.val = cos(radians);
       break;
     case 'C':  // acos
-      result.val = acos(radians);
+      result.val = acos(A.val);
       break;
     case 't':  // tan
       result.val = tan(radians);
       break;
     case 'T':  // atan
-      result.val = atan(radians);
+      result.val = atan(A.val);
       break;
     case 'Q':  // sqrt
       result.val = sqrt(A.val);
@@ -132,7 +139,7 @@ int function_calculate(stack_t *stack, int operator) {
       result.val = log(A.val);
       break;
     case 'L':  // log
-      result.val = log(A.val);
+      result.val = log10(A.val);
       break;
     default:
       break;
@@ -140,10 +147,5 @@ int function_calculate(stack_t *stack, int operator) {
   if (error_code == SUCCESS) {
     error_code = push(stack, &result);
   }
-  // operator= operator;
-  // stack->top = stack->top;
-  // printf(
-  //     "Функцию для обработки тригонметрии пока не завезли =(\nПопробуйте "
-  //     "позже\n");
   return error_code;
 }
