@@ -2,7 +2,7 @@
 
 int get_number(char **src, stack_t *stack);
 int arithmetic_calculate(stack_t *stack, int operator);
-int function_calculate(stack_t *stack, int operator);
+int function_calculate(stack_t *stack, int operator, char ** src);
 
 int calculation(char *src, double *result) {
   errnum error_code = SUCCESS;
@@ -15,12 +15,12 @@ int calculation(char *src, double *result) {
     while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
     if (*src == '\0' && error_code == SUCCESS) {
       error_code = SUCCESS;
-    } else if (IS_DIGIT(*src) || *src == 'u') {
+    } else if (IS_DIGIT(*src) || (*src == 'u' && IS_DIGIT(*(src + 2)))) {
       error_code = get_number(&src, &operands_stack);
     } else if (IS_OPERATOR(*src)) {
       error_code = arithmetic_calculate(&operands_stack, *src);
-    } else if (IS_FUNCTION(*src)) {
-      error_code = function_calculate(&operands_stack, *src);
+    } else if (IS_FUNCTION(*src) || (*src == 'u' && IS_FUNCTION(*(src + 2)))) {
+      error_code = function_calculate(&operands_stack, *src, &src);
     }
   }
   if (error_code == SUCCESS) {
@@ -102,10 +102,17 @@ int arithmetic_calculate(stack_t *stack, int operator) {
   return error_code;
 }
 
-int function_calculate(stack_t *stack, int operator) {
+int function_calculate(stack_t *stack, int operator, char ** src) {
   errnum error_code = SUCCESS;
   Lex A = {0}, result = {0};
   double radians = 0.0;
+  int unary = 1;
+  if (**src == 'u') {
+    unary = -1;
+    *src += 1;
+    while (IS_SPACE(**src)) *src++;
+    operator=(int) * *src;
+  }
   if (pop(stack, &A) == SUCCESS) {
     error_code = SUCCESS;
   } else {
@@ -145,6 +152,7 @@ int function_calculate(stack_t *stack, int operator) {
       break;
   }
   if (error_code == SUCCESS) {
+    result.val *= unary;
     error_code = push(stack, &result);
   }
   return error_code;

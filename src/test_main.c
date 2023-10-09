@@ -2,9 +2,10 @@
 
 int main() {
   double result = 0;
-
-  result = asin(0.5);
-  printf("%lf\n", result);
+  char *src = "3.123456789";
+  char *endptr;
+  result = strtod(src, &endptr);
+  printf("%.10lf\n", result);
   return 0;
 }
 
