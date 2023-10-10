@@ -1,14 +1,13 @@
 #include "smart_calc.h"
 
-int get_number(char **src, stack_t *stack);
-int arithmetic_calculate(stack_t *stack, int operator);
-int function_calculate(stack_t *stack, int operator, char ** src);
+int get_number(char **src, stack_tt *stack);
+int arithmetic_calculate(stack_tt *stack, int operator);
+int function_calculate(stack_tt *stack, int operator, char ** src);
 
 int calculation(char *src, double *result) {
   errnum error_code = SUCCESS;
-  // Position status = START_POS;
   Lex result_tmp = {0};
-  stack_t operands_stack;
+  stack_tt operands_stack;
   create_stack(&operands_stack);
 
   for (; *src && error_code == SUCCESS; src++) {
@@ -33,7 +32,7 @@ int calculation(char *src, double *result) {
   return error_code;
 }
 
-int get_number(char **src, stack_t *stack) {
+int get_number(char **src, stack_tt *stack) {
   errnum error_code = SUCCESS;
   char *endptr = NULL;
   int unary = 1;
@@ -54,7 +53,7 @@ int get_number(char **src, stack_t *stack) {
   return error_code;
 }
 
-int arithmetic_calculate(stack_t *stack, int operator) {
+int arithmetic_calculate(stack_tt *stack, int operator) {
   errnum error_code = SUCCESS;
   // double A = 0, B = 0;
   Lex A = {0}, B = {0}, result = {0};
@@ -102,15 +101,14 @@ int arithmetic_calculate(stack_t *stack, int operator) {
   return error_code;
 }
 
-int function_calculate(stack_t *stack, int operator, char ** src) {
+int function_calculate(stack_tt *stack, int operator, char ** src) {
   errnum error_code = SUCCESS;
   Lex A = {0}, result = {0};
-  double radians = 0.0;
   int unary = 1;
   if (**src == 'u') {
     unary = -1;
     *src += 1;
-    while (IS_SPACE(**src)) *src++;
+    while (IS_SPACE(**src)) *src += 1;
     operator=(int) * *src;
   }
   if (pop(stack, &A) == SUCCESS) {
@@ -119,22 +117,21 @@ int function_calculate(stack_t *stack, int operator, char ** src) {
     error_code = CALC_ERROR;
     return error_code;  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
-  radians = A.val * M_PI / 180.0;
   switch (operator) {
     case 's':  // sin
-      result.val = sin(radians);
+      result.val = sin(A.val);
       break;
     case 'S':  // asin
       result.val = asin(A.val);
       break;
     case 'c':  // cos
-      result.val = cos(radians);
+      result.val = cos(A.val);
       break;
     case 'C':  // acos
       result.val = acos(A.val);
       break;
     case 't':  // tan
-      result.val = tan(radians);
+      result.val = tan(A.val);
       break;
     case 'T':  // atan
       result.val = atan(A.val);

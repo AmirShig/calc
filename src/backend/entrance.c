@@ -3,11 +3,13 @@
 int entrance() {
   errnum error_code = SUCCESS;
 
-  // char input[N_MAX + 1] = "-512 - 128 * (125 - (17 + 12 ^ 2))";  // 5120
-  // char input[N_MAX + 1] = "105 * ln(15) - 19^3 / 11";
-  // char input[N_MAX + 1] = "asin(0.5) + cos(60)"; // ошибка?
-  char input[N_MAX + 1] =
-      "ln(2.718) * (sin(30) * cos(60) - tan(45)) + (8 - 3) / 5";
+  // char input[N_MAX + 1] = "-512 - 128 * (125 - (17 + 12 ^ 2))";  // 4096
+  // char input[N_MAX + 1] = "105 * ln(15) - 19^3 / 11"; // -339.20018343
+  // char input[N_MAX + 1] = "asin(0.5) + cos(60)";  // ошибка?
+  // char input[N_MAX + 1] = "ln(2.718)";  // 0.99989631572
+  char input[N_MAX + 1] = "sin(30)";  // -0.98803162409
+  // char input[N_MAX + 1] =
+  //     "ln(2.718) * (sin(30) * cos(60) - tan(45)) + (8 - 3) / 5";
   // printf("input: %s\n", input);
 
   // char input[N_MAX + 1] = {0};

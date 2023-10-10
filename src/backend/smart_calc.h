@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define M_PI 3.14159265358979323846
+// #define M_PI 3.14159265358979323846
 #define N_MAX 256
 #define OPERATORS "+-*/^M"
 #define TRG_FUNCTION "sScCtTlLQ"
@@ -20,29 +20,20 @@
 
 typedef enum func { COS = 20, SIN, TAN, ACOS, ASIN, ATAN, SQRT, LN, LOG } func;
 
-typedef enum lex_type {
-  // DIGIT = 10,
-  // OPERATOR,
-  // BRACKET,
-  // FUNCTION,
-  // UNARY
-  BINARY
-} data_type;
-
 // typedef union Lex_value {
-//   int i_num;
-//   double float_num;
-//   char character;
+//   int value;
+//   double value;
+//   char value;
 // } Lex_value;
 
 // status of current position
 typedef enum Position {
-  START_POS = 1,  // Начало выражения / сразу после откр. скобки
-  CALC_OPER = 2,  // Арифметический оператор
-  END_POS = 3,  // Конец выражения / после закр. скобки
-  UNARY = 4,  // Послу унарного оператора
-  DIGIT = 5,  // После числа
-  TRG_POS = 6  // После тригонометрического оператора
+  START_POS,  // Начало выражения / сразу после откр. скобки
+  CALC_OPER,  // Арифметический оператор
+  END_POS,  // Конец выражения / после закр. скобки
+  UNARY,    // Послу унарного оператора
+  DIGIT,    // После числа
+  TRG_POS  // После тригонометрического оператора
 } Position;
 
 typedef enum error_code {
@@ -58,20 +49,16 @@ typedef enum error_code {
 typedef struct Lex {
   double val;    // Сама лексема
   int priority;  // проиоретет лексемы
-  data_type val_type;  // тип лексемы (число/скобка/оператор)
 } Lex;
 
 typedef struct Node {
-  // Lex val;  // Значение, тип и приоритет лексемы
-  double val;    // Сама лексема
-  int priority;  // проиоретет лексемы
-  data_type val_type;  // тип лексемы (число/скобка/оператор)
+  Lex val;            // Значение и приоритет лексемы
   struct Node *next;  // Указатель на след. элемент стека
 } Node;
 
-typedef struct stack_t {
+typedef struct stack_tt {
   Node *top;  // Вершина стека
-} stack_t;
+} stack_tt;
 
 /***************** validation *******************/
 
@@ -79,10 +66,10 @@ int validation(char *input);
 
 /***************** stack operations *******************/
 
-void create_stack(stack_t *stack);
-int is_empty(stack_t *stack);
-int push(stack_t *head, Lex *value);
-int pop(stack_t *stack, Lex *result);
+void create_stack(stack_tt *stack);
+int is_empty(stack_tt *stack);
+int push(stack_tt *head, Lex *value);
+int pop(stack_tt *stack, Lex *result);
 
 /***************** parser *******************/
 

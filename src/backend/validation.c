@@ -3,7 +3,7 @@
 int validation(char *input) {
   errnum error_code = SUCCESS;
   Position status = START_POS;
-  if (!input) return INCORRECT_INPUT;
+  if (!input) return INCORRECT_INPUT; //   ???
   char *src = (char *)calloc(strlen(input), sizeof(char));
   if (src == NULL) {
     error_code = MALLOC_ERR;
@@ -44,7 +44,6 @@ int validation(char *input) {
 
 int check_operators(char **src, Position *status) {
   errnum error_code = SUCCESS;
-
   switch (**src) {
     case '(':
       if (*status == DIGIT || *status == END_POS) {

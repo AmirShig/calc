@@ -29,7 +29,6 @@ validate:
 
 main_test:
 	$(CC) $(CFLAGS) stack_operations.c parser.c validation.c entrance.c calculation.c -lm -o $@
-	# $(CC) $(CFLAGS) test_main.c validation.c -o $@
 
 clean:
 	rm -rf *.a *.o 
