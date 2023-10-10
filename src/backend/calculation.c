@@ -14,11 +14,11 @@ int calculation(char *src, double *result) {
     while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
     if (*src == '\0' && error_code == SUCCESS) {
       error_code = SUCCESS;
-    } else if (IS_DIGIT(*src) || (*src == 'u' && IS_DIGIT(*(src + 2)))) {
+    } else if (IS_DIGIT(*src) || (*src == 'u' && IS_DIGIT(*(src + 1)))) {
       error_code = get_number(&src, &operands_stack);
     } else if (IS_OPERATOR(*src)) {
       error_code = arithmetic_calculate(&operands_stack, *src);
-    } else if (IS_FUNCTION(*src) || (*src == 'u' && IS_FUNCTION(*(src + 2)))) {
+    } else if (IS_FUNCTION(*src) || (*src == 'u' && IS_FUNCTION(*(src + 1)))) {
       error_code = function_calculate(&operands_stack, *src, &src);
     }
   }
@@ -55,7 +55,6 @@ int get_number(char **src, stack_tt *stack) {
 
 int arithmetic_calculate(stack_tt *stack, int operator) {
   errnum error_code = SUCCESS;
-  // double A = 0, B = 0;
   Lex A = {0}, B = {0}, result = {0};
 
   if (pop(stack, &A) == SUCCESS && pop(stack, &B) == SUCCESS) {
@@ -137,7 +136,10 @@ int function_calculate(stack_tt *stack, int operator, char ** src) {
       result.val = atan(A.val);
       break;
     case 'Q':  // sqrt
-      result.val = sqrt(A.val);
+      if (A.val < 0)
+        error_code = CALC_ERROR;
+      else
+        result.val = sqrt(A.val);
       break;
     case 'l':  // ln
       result.val = log(A.val);

@@ -7,10 +7,21 @@ int entrance() {
   // char input[N_MAX + 1] = "105 * ln(15) - 19^3 / 11"; // -339.20018343
   // char input[N_MAX + 1] = "asin(0.5) + cos(60)";  // ошибка?
   // char input[N_MAX + 1] = "ln(2.718)";  // 0.99989631572
-  char input[N_MAX + 1] = "sin(30)";  // -0.98803162409
-  // char input[N_MAX + 1] =
-  //     "ln(2.718) * (sin(30) * cos(60) - tan(45)) + (8 - 3) / 5";
+  // char input[N_MAX + 1] = "sqrt(sin(30) + cos(45)) * (3^2 + ln(2)) / (-2)";
+  // // char input[N_MAX + 1] = "sin(30)";  // -0.98803162409 char input[N_MAX +
+  // 1] =
+  //     "ln(2.718) * (sin(30) * cos(60) - tan(45)) + (8 - 3) / 5";  //
+  //     0.32130933014
   // printf("input: %s\n", input);
+
+  // char input[N_MAX + 1] =
+  //     "(-((0.0000001 * 7) + 6 * (9 - 2.01) / 8.4 + (0.32 ^ 5)))";
+
+  //
+  char input[N_MAX + 1] = "-(1)";  //
+  // (-cos(3)) - (-cos(1)) + 4 / 2 - (sin(1)) * 6.09 / (-tan(2) / acos(-1))
+  double result_exp = -(1);
+  // double result_exp = -4.996213;
 
   // char input[N_MAX + 1] = {0};
   char result_rpn[N_MAX * 2] = {0};
@@ -47,7 +58,13 @@ int entrance() {
   if (error_code == SUCCESS) {
     error_code = calculation(result_rpn, &result);
     if (error_code == SUCCESS) {
-      printf("SUCCESS!!!\nResult: %lf\n", result);
+      if (result - result_exp < 1e-6) {
+        printf("SUCCESS!!!\nResult: %lf\n", result);
+      } else {
+        printf("FAILED!!!\nResult: %lf\n", result);
+      }
+      printf("exp result = %lf\n", result_exp);
+
     } else {
       printf("Calculation FAILED!\nError code: %d\n", error_code);
     }

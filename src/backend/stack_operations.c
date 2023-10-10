@@ -16,6 +16,7 @@ int push(stack_tt *head, Lex *value) {
   } else {
     new_node->val.val = value->val;
     new_node->val.priority = value->priority;
+    new_node->val.unary = value->unary;
     new_node->next = head->top;
     head->top = new_node;
   }
@@ -28,7 +29,10 @@ int pop(stack_tt *stack, Lex *result) {
     error_code = EMPTY_STACK;
   } else {
     Node *node_tmp = stack->top;
-    if (result != NULL) result->val = node_tmp->val.val;
+    if (result != NULL) {
+      result->val = node_tmp->val.val;
+      result->unary = node_tmp->val.unary;
+    }
     stack->top = node_tmp->next;
     free(node_tmp);
   }

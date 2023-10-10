@@ -49,6 +49,7 @@ typedef enum error_code {
 typedef struct Lex {
   double val;    // Сама лексема
   int priority;  // проиоретет лексемы
+  int unary;     // Аргумент для унарного минуса
 } Lex;
 
 typedef struct Node {

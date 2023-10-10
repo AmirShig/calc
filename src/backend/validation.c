@@ -3,7 +3,7 @@
 int validation(char *input) {
   errnum error_code = SUCCESS;
   Position status = START_POS;
-  if (!input) return INCORRECT_INPUT; //   ???
+  if (!input) return INCORRECT_INPUT;  //   ???
   char *src = (char *)calloc(strlen(input), sizeof(char));
   if (src == NULL) {
     error_code = MALLOC_ERR;
@@ -71,9 +71,13 @@ int check_operators(char **src, Position *status) {
       }
       break;
     case 'm':
-      if (strncmp(*src, "mod", 3) == 0) {
+      if (*status == START_POS || *status == CALC_OPER || *status == UNARY) {
+        error_code = FAILURE;
+      } else if (strncmp(*src, "mod", 3) == 0) {
         *src += 2;
         *status = CALC_OPER;
+      } else {
+        error_code = FAILURE;
       }
       break;
     default:
