@@ -30,6 +30,8 @@ int validation(char *input) {
         }
         while (IS_DIGIT(*src)) src++;
       }
+    } else if (*src == 'x') {
+      status = DIGIT;
     }
     while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
 

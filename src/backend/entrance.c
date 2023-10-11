@@ -1,6 +1,6 @@
 #include "smart_calc.h"
 
-int entrance(char *input, double *result) {
+int entrance(char *input, double *result, double x_value) {
   errnum error_code = SUCCESS;
   char result_rpn[N_MAX * 2] = {0};
   double result_tmp = 0.0;
@@ -24,7 +24,7 @@ int entrance(char *input, double *result) {
 
   // Находим решение получившегося выражения
   if (error_code == SUCCESS) {
-    error_code = calculation(result_rpn, &result_tmp);
+    error_code = calculation(result_rpn, &result_tmp, x_value);
   }
   *result = result_tmp;
 
@@ -42,7 +42,7 @@ int entrance(char *input, double *result) {
 int main() {
   errnum error_code = SUCCESS;
   // if (fgets(input, N_MAX, stdin)) {}
-  char input[N_MAX + 1] = "-(10 * -(5)) + 5";
+  char input[N_MAX + 1] = "x + 5";
   // char input[N_MAX + 1] = "-512 - 128 * (125 - (17 + 12 ^ 2))";  // 4096
   // char input[N_MAX + 1] = "105 * ln(15) - 19^3 / 11"; // -339.20018343
   // char input[N_MAX + 1] = "asin(0.5) + cos(60)";  // ошибка?
@@ -59,14 +59,15 @@ int main() {
 
   // char input[N_MAX + 1] = "-(1)";  //
   // (-cos(3)) - (-cos(1)) + 4 / 2 - (sin(1)) * 6.09 / (-tan(2) / acos(-1))
-  double result = 0.0, result_exp = -(10 * -(5)) + 5;
+  double result = 0.0, result_exp = 105 + 5;
+  double x_value = 105.0;
   // double result_exp = -4.996213;
 
   // char input[N_MAX + 1] = {0};
 
   printf("INPUT: %s\n", input);
 
-  error_code = entrance(input, &result);
+  error_code = entrance(input, &result, x_value);
 
   if (error_code == SUCCESS) {
     if (result - result_exp < 1e-6) {

@@ -1,10 +1,10 @@
 #include "smart_calc.h"
 
-int get_number(char **src, stack_tt *stack);
+int get_number(char **src, stack_tt *stack, double x_value);
 int arithmetic_calculate(stack_tt *stack, int operator);
 int function_calculate(stack_tt *stack, int operator, char ** src);
 
-int calculation(char *src, double *result) {
+int calculation(char *src, double *result, double x_value) {
   errnum error_code = SUCCESS;
   Lex result_tmp = {0};
   stack_tt operands_stack;
@@ -14,8 +14,9 @@ int calculation(char *src, double *result) {
     while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
     if (*src == '\0' && error_code == SUCCESS) {
       error_code = SUCCESS;
-    } else if (IS_DIGIT(*src) || (*src == 'u' && IS_DIGIT(*(src + 1)))) {
-      error_code = get_number(&src, &operands_stack);
+    } else if (IS_DIGIT(*src) || *src == 'x' || (*src == 'u' && *src == 'x') ||
+               (*src == 'u' && IS_DIGIT(*(src + 1)))) {
+      error_code = get_number(&src, &operands_stack, x_value);
     } else if (IS_OPERATOR(*src)) {
       error_code = arithmetic_calculate(&operands_stack, *src);
     } else if (IS_FUNCTION(*src) || (*src == 'u' && IS_FUNCTION(*(src + 1)))) {
@@ -32,20 +33,27 @@ int calculation(char *src, double *result) {
   return error_code;
 }
 
-int get_number(char **src, stack_tt *stack) {
+int get_number(char **src, stack_tt *stack, double x_value) {
   errnum error_code = SUCCESS;
+  double number = 0.0;
   char *endptr = NULL;
   int unary = 1;
   if (**src == 'u') {
     unary = -1;
     *src += 1;
   }
-  double number = strtod(*src, &endptr);
-  if (endptr == *src) {  // число не обнаружено
-    printf("Error of read the number\n");
-    error_code = INCORRECT_INPUT;
+  if (**src == 'x') {
+    number = x_value;
   } else {
-    *src = endptr;
+    number = strtod(*src, &endptr);
+    if (endptr == *src) {  // число не обнаружено
+      printf("Error of read the number\n");
+      error_code = INCORRECT_INPUT;
+    } else {
+      *src = endptr;
+    }
+  }
+  if (error_code == SUCCESS) {
     Lex lex_tmp = {0};
     lex_tmp.val = number * unary;
     error_code = push(stack, &lex_tmp);

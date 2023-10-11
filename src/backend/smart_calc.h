@@ -77,6 +77,6 @@ int parser_to_rpn(char *src, char *RPN_exp);
 
 /***************** calculation *******************/
 
-int calculation(char *src, double *result);
+int calculation(char *src, double *result, double x_value);
 
 #endif  // SMART_CALC_H

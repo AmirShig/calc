@@ -41,7 +41,7 @@ int parser_to_rpn(char *src, char *RPN_exp) {
         error_code = closing_bracket(&operators_stack, &args);
       } else if (strchr("+-*/^", *src)) {
         error_code = operators(&operators_stack, &src, &args);
-      } else if (IS_DIGIT(*src)) {
+      } else if (IS_DIGIT(*src) || *src == 'x') {
         number(&src, &args);
       } else {
         error_code = functions(&src, &operators_stack, &args);
@@ -102,18 +102,22 @@ void number(char **src, params *args) {
     args->RPN_tmp[args->index++] = 'u';
   }
   args->status = DIGIT;
-  while (IS_DIGIT(**src)) {
-    args->RPN_tmp[args->index++] = **src;
-    *src += 1;
-  }
-  if ((**src) == '.') {
-    args->RPN_tmp[args->index] = '.';
-    args->index += 1;
-    *src += 1;
+  if (**src == 'x') {
+    args->RPN_tmp[args->index++] = 'x';
+  } else if (IS_DIGIT(**src)) {
     while (IS_DIGIT(**src)) {
-      args->RPN_tmp[args->index] = **src;
+      args->RPN_tmp[args->index++] = **src;
+      *src += 1;
+    }
+    if ((**src) == '.') {
+      args->RPN_tmp[args->index] = '.';
       args->index += 1;
       *src += 1;
+      while (IS_DIGIT(**src)) {
+        args->RPN_tmp[args->index] = **src;
+        args->index += 1;
+        *src += 1;
+      }
     }
   }
   args->RPN_tmp[args->index++] = ' ';
