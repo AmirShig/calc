@@ -23,12 +23,12 @@ int calculation(char *src, double *result) {
     }
   }
   if (error_code == SUCCESS) {
-    if (pop(&operands_stack, &result_tmp) == SUCCESS)
+    if (pop(&operands_stack, &result_tmp) == SUCCESS) {
       *result = result_tmp.val;
-    else
+    } else {
       error_code = FAILURE;
+    }
   }
-
   return error_code;
 }
 

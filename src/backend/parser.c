@@ -5,6 +5,7 @@ typedef struct params {
   Position status;
   char RPN_tmp[N_MAX * 2];
   int index;
+  int unary_bracket;
 } params;
 
 int closing_bracket(stack_tt *operators_stack, params *args);
@@ -28,33 +29,23 @@ int parser_to_rpn(char *src, char *RPN_exp) {
         args.RPN_tmp[args.index++] = (int)lex_tmp.val;
         args.RPN_tmp[args.index++] = ' ';
       }
-      break;  // ??????????????
-    }
-    while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
-    switch (*src) {
-      case '(':
+    } else {
+      while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
+      if (*src == '(') {
+        if (args.status == UNARY) args.unary_bracket++;
         args.status = START_POS;
         lex_tmp.val = (int)*src;
         push(&operators_stack, &lex_tmp);
-        break;
-      case ')':
+      } else if (*src == ')') {
         args.status = END_POS;
         error_code = closing_bracket(&operators_stack, &args);
-        break;
-      case '+':
-      case '-':
-      case '*':
-      case '/':
-      case '^':
+      } else if (strchr("+-*/^", *src)) {
         error_code = operators(&operators_stack, &src, &args);
-        break;
-      default:
-        if (IS_DIGIT(*src)) {
-          number(&src, &args);
-        } else {
-          error_code = functions(&src, &operators_stack, &args);
-        }
-        break;
+      } else if (IS_DIGIT(*src)) {
+        number(&src, &args);
+      } else {
+        error_code = functions(&src, &operators_stack, &args);
+      }
     }
   }
   if (error_code == SUCCESS) strcpy(RPN_exp, args.RPN_tmp);
@@ -69,6 +60,11 @@ int closing_bracket(stack_tt *operators_stack, params *args) {
     if (lex_tmp.unary) args->RPN_tmp[args->index++] = 'u';
     args->RPN_tmp[args->index++] = (int)lex_tmp.val;
     args->RPN_tmp[args->index++] = ' ';
+  }
+  if (args->unary_bracket) {
+    strcat(args->RPN_tmp, "u1 * ");
+    args->index += 5;
+    args->unary_bracket--;
   }
   if (!is_empty(operators_stack) && operators_stack->top->val.val == '(') {
     error_code = pop(operators_stack, NULL);
