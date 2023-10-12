@@ -104,6 +104,7 @@ void number(char **src, params *args) {
   args->status = DIGIT;
   if (**src == 'x') {
     args->RPN_tmp[args->index++] = 'x';
+    *src += 1;
   } else if (IS_DIGIT(**src)) {
     while (IS_DIGIT(**src)) {
       args->RPN_tmp[args->index++] = **src;
