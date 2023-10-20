@@ -1,0 +1,6 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource>
+    <file>./calc.ico</file>
+  </qresource>
+</RCC>

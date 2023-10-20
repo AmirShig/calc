@@ -38,5 +38,3 @@ int pop(stack_tt *stack, Lex *result) {
   }
   return error_code;
 }
-
-// int pick(stack_tt *stack, double *result) {}

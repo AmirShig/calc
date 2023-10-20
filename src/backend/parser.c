@@ -1,25 +1,10 @@
 #include "smart_calc.h"
 
-/*header start*/
-typedef struct params {
-  Position status;
-  char RPN_tmp[N_MAX * 2];
-  int index;
-  int unary_bracket;
-} params;
-
-int closing_bracket(stack_tt *operators_stack, params *args);
-int operators(stack_tt *operators_stack, char **src, params *args);
-void number(char **src, params *args);
-int get_priority(char src);
-int functions(char **src, stack_tt *operators_stack, params *args);
-/*header end*/
-
 int parser_to_rpn(char *src, char *RPN_exp) {
   errnum error_code = SUCCESS;
   stack_tt operators_stack;
   create_stack(&operators_stack);
-  params args = {0};
+  parser_params args = {0};
   for (int end_status = 0; error_code == SUCCESS && !end_status; src++) {
     Lex lex_tmp = {0};
     if (*src == '\0') {
@@ -33,6 +18,7 @@ int parser_to_rpn(char *src, char *RPN_exp) {
       while (IS_SPACE(*src)) src++;  // пропускаем все пробелы
       if (*src == '(') {
         if (args.status == UNARY) args.unary_bracket++;
+        args.brackets++;
         args.status = START_POS;
         lex_tmp.val = (int)*src;
         push(&operators_stack, &lex_tmp);
@@ -52,7 +38,7 @@ int parser_to_rpn(char *src, char *RPN_exp) {
   return error_code;
 }
 
-int closing_bracket(stack_tt *operators_stack, params *args) {
+int closing_bracket(stack_tt *operators_stack, parser_params *args) {
   errnum error_code = SUCCESS;
   Lex lex_tmp = {0};
   while (!is_empty(operators_stack) && operators_stack->top->val.val != '(') {
@@ -61,11 +47,12 @@ int closing_bracket(stack_tt *operators_stack, params *args) {
     args->RPN_tmp[args->index++] = (int)lex_tmp.val;
     args->RPN_tmp[args->index++] = ' ';
   }
-  if (args->unary_bracket) {
+  if (args->unary_bracket == args->brackets) {
     strcat(args->RPN_tmp, "u1 * ");
     args->index += 5;
     args->unary_bracket--;
   }
+  args->brackets--;
   if (!is_empty(operators_stack) && operators_stack->top->val.val == '(') {
     error_code = pop(operators_stack, NULL);
   } else {
@@ -74,30 +61,31 @@ int closing_bracket(stack_tt *operators_stack, params *args) {
   return error_code;
 }
 
-int operators(stack_tt *operators_stack, char **src, params *args) {
+int operators(stack_tt *operators_stack, char **src, parser_params *args) {
   errnum error_code = SUCCESS;
   Lex lex_tmp = {0};
+  Lex lex_current = {0};
   if ((args->status == CALC_OPER || args->status == START_POS) &&
-      **src == '-') {
-    args->status = UNARY;
+      (**src == '-' || **src == '+')) {
+    if (**src == '-') args->status = UNARY;
   } else {
     args->status = CALC_OPER;
-    lex_tmp.priority = get_priority(**src);
+    lex_current.priority = get_priority(**src);
     while (!is_empty(operators_stack) &&
-           lex_tmp.priority <= operators_stack->top->val.priority) {
+           lex_current.priority <= operators_stack->top->val.priority) {
       error_code = pop(operators_stack, &lex_tmp);
       if (lex_tmp.unary) args->RPN_tmp[args->index++] = 'u';
       args->RPN_tmp[args->index++] = (int)lex_tmp.val;
       args->RPN_tmp[args->index++] = ' ';
     }
-    lex_tmp.val = (int)**src;
-    lex_tmp.priority = get_priority(**src);
-    error_code = push(operators_stack, &lex_tmp);
+    lex_current.val = (int)**src;
+    lex_current.priority = get_priority(**src);
+    error_code = push(operators_stack, &lex_current);
   }
   return error_code;
 }
 
-void number(char **src, params *args) {
+void number(char **src, parser_params *args) {
   if (args->status == UNARY) {
     args->RPN_tmp[args->index++] = 'u';
   }
@@ -130,65 +118,35 @@ int get_priority(char src) {
   int priority = 0;
   if (src == '+' || src == '-') {
     priority = 1;
-  } else if (src == '*' || src == '/') {
+  } else if (src == '*' || src == '/' || src == 'm') {
     priority = 2;
   } else if (src == '^') {
     priority = 4;
-  } else if (isalpha(src)) {  // trigonometry
+  } else if (strchr(TRG_FUNCTION, src)) {  // trigonometry
     priority = 3;
   }
   return priority;
 }
 
-int functions(char **src, stack_tt *operators_stack, params *args) {
+int functions(char **src, stack_tt *operators_stack, parser_params *args) {
   errnum error_code = SUCCESS;
   Lex lex_tmp = {0};
+  char *function_name[] = {"sin",  "cos",  "tan", "asin", "acos",
+                           "atan", "sqrt", "log", "ln",   "mod"};
+  char functions_code[] = {'s', 'c', 't', 'S', 'C', 'T', 'Q', 'L', 'l', 'M'};
+  int func_num = sizeof(function_name) / sizeof(function_name[0]);
+
   if (args->status == UNARY) lex_tmp.unary = 1;
-  if (strncmp(*src, "sin", 3) == 0) {
-    *src += 3;
-    lex_tmp.val = (int)'s';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "sqrt", 4) == 0) {
-    *src += 4;
-    lex_tmp.val = (int)'Q';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "cos", 3) == 0) {
-    *src += 3;
-    lex_tmp.val = (int)'c';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "tan", 3) == 0) {
-    *src += 3;
-    lex_tmp.val = (int)'t';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "acos", 4) == 0) {
-    *src += 4;
-    lex_tmp.val = (int)'C';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "asin", 4) == 0) {
-    *src += 4;
-    lex_tmp.val = (int)'S';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "atan", 4) == 0) {
-    *src += 4;
-    lex_tmp.val = (int)'T';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "log", 3) == 0) {
-    *src += 3;
-    lex_tmp.val = (int)'L';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "ln", 2) == 0) {
-    *src += 2;
-    lex_tmp.val = (int)'l';
-    lex_tmp.priority = 3;
-  } else if (strncmp(*src, "mod", 3) == 0) {
-    *src += 3;
-    lex_tmp.unary = 0;
-    lex_tmp.val = (int)'M';
-    lex_tmp.priority = 2;
-  }
-  if (lex_tmp.priority) {
-    if (**src != '\0') *src -= 1;
-    error_code = push(operators_stack, &lex_tmp);
+  for (int i = 0; i < func_num; i++) {
+    if (strncmp(*src, function_name[i], strlen(function_name[i])) == 0) {
+      args->status = CALC_OPER;
+      *src += strlen(function_name[i]);
+      lex_tmp.val = (int)functions_code[i];
+      lex_tmp.priority = (functions_code[i] == 'M' ? 2 : 3);
+      lex_tmp.unary = (functions_code[i] == 'M' ? 0 : lex_tmp.unary);
+      if (**src != '\0') *src -= 1;
+      error_code = push(operators_stack, &lex_tmp);
+    }
   }
   return error_code;
 }
